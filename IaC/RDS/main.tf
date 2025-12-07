@@ -1,5 +1,6 @@
 ###############################################
-# TERRAFORM: FULLY SELF-CONTAINED RDS SQLSERVER
+# TERRAFORM: FULLY AUTOMATED SQL SERVER EXPRESS
+# Works in a fresh AWS account with no VPC
 ###############################################
 
 terraform {
@@ -40,12 +41,18 @@ resource "random_password" "password" {
 }
 
 ###############################################
-# VPC + SUBNETS + INTERNET + ROUTING
+# VPC WITH REQUIRED DNS SETTINGS (FIX FOR ERROR)
 ###############################################
 
 resource "aws_vpc" "main" {
-  cidr_block = "10.10.0.0/16"
+  cidr_block           = "10.10.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 }
+
+###############################################
+# PUBLIC SUBNETS (2 AZs)
+###############################################
 
 resource "aws_subnet" "subnet_a" {
   vpc_id                  = aws_vpc.main.id
@@ -60,6 +67,10 @@ resource "aws_subnet" "subnet_b" {
   availability_zone       = "eu-west-2b"
   map_public_ip_on_launch = true
 }
+
+###############################################
+# INTERNET ACCESS (IGW + ROUTE TABLE)
+###############################################
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
@@ -85,7 +96,7 @@ resource "aws_route_table_association" "b" {
 }
 
 ###############################################
-# SECURITY GROUP – ALLOW SQLSERVER (1433)
+# SECURITY GROUP – ALLOW SQL SERVER (1433)
 ###############################################
 
 resource "aws_security_group" "sql_sg" {
@@ -97,7 +108,7 @@ resource "aws_security_group" "sql_sg" {
     from_port   = 1433
     to_port     = 1433
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # unrestricted since you don't care
+    cidr_blocks = ["0.0.0.0/0"]  # Fully open (safe since account is disposable)
   }
 
   egress {
@@ -127,7 +138,7 @@ resource "aws_db_subnet_group" "sql_subnets" {
 resource "aws_db_instance" "sqlserver" {
   identifier               = random_pet.db_name.id
   engine                   = "sqlserver-ex"
-  instance_class           = "db.t3.micro"
+  instance_class           = "db.t3.micro"    # Free tier
   allocated_storage        = 20
 
   username = random_string.username.result

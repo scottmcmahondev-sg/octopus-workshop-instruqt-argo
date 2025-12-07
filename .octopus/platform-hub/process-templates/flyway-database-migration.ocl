@@ -74,7 +74,7 @@ step "flyway-database-migrations" {
             Flyway.Database.User = "#{parameter.database.user}"
             Flyway.Database.User.Password = "#{parameter.database.password}"
             Flyway.Package.Value = "parameter.database.package"
-            Flyway.Target.Url = "jdbc:sqlserver://#{parameter.database.host}:1433;databaseName=#{parameter.database.name}encrypt=false;trustServerCertificate=true;"
+            Flyway.Target.Url = "jdbc:sqlserver://#{parameter.database.host}:1433;databaseName=#{parameter.database.name};encrypt=false;trustServerCertificate=true;"
             Octopus.Action.EnabledFeatures = "Octopus.Features.SelectPowerShellEditionForWindows"
             Octopus.Action.PowerShell.Edition = "Core"
             Octopus.Action.RunOnServer = "true"

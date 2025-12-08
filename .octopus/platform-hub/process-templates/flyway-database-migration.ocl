@@ -311,7 +311,6 @@ step "flyway-database-migrations-dryrun" {
 
     action {
         action_type = "Octopus.Script"
-        environments_variable = "#{paramater.review.environemnt}"
         properties = {
             Flyway.Authentication.Method = "usernamepassword"
             Flyway.Command.BaseLineOnMigrate = "false"

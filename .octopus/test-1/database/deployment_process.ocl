@@ -31,4 +31,8 @@ process_template "run-a-process-template" {
     parameter "parameter.container.feed" {
         value = "Feeds-1044"
     }
+
+    parameter "parameter.package.path" {
+        value = "filesystem:#{Octopus.Action.Package[Flyway.Package.Value].ExtractedPath}/src/Database"
+    }
 }

@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/scottmcmahondev-sg/octopus-workshop-instruqt-argo/sample.frontend
-  tag: 25.4.11
+  tag: 25.4.12
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
